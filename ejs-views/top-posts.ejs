@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partials/head.ejs') %>
+    <body>
+        <%- include('./partials/nav.ejs') %>
+    </body>
+
+    <body>
+      <%- include('./partials/nav.ejs') %>
+        <h1 class="list_stat">Топ статей:</h1>
+        <ul>
+          <% if (posts.length) { %>
+            <% posts.forEach(({ id, title, createdAt, text, author, review }) => { %>
+              <li>
+                <article>
+                  <h2>
+                    <a href="/posts/<%= id %>">
+                      <%= title %>
+                    </a>
+                  </h2>
+                  <p>
+                    <%= text %>
+                  </p>
+                  <div class="info">
+                    <span><%= author %></span>
+                    <h5 class="h5"></h5>
+                  </div>
+                  <p>
+                    <% 
+                    getAvgMark = function(review){
+                      sum = 0;
+                      for (var i = 0; i < review.length; i++){
+                        sum += review[i].mark;
+                      }
+                      return sum/review.length;
+                    }
+                    %>
+                    <%= getAvgMark(review) %>
+                  </p>
+                </article>
+              </li>
+              <% }) %>
+                <% } %>
+        </ul>
+        <script>
+          function abc(){
+          console.log(posts)
+        }
+        abc();
+        </script>
+    </body>
+
+    
+</html>

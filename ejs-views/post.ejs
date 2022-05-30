@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partials/head.ejs') %>
+
+  <body id="body">
+    <%- include('./partials/nav.ejs') %>
+      <article class="post">
+        <div class="info">
+          <span><span style="color: gray;">Дата: </span><%= post.createdAt.toLocaleDateString() || 'No date' %></span>
+          <span><span style="color: gray;">Название: </span><%= post.title %></span>
+        </div>
+        <p>
+          <%= post.text %>
+        </p>
+        <p>
+          <span><span style="color: gray;">Автор статьи: </span><%= post.author %></span>
+        </p>
+        <a href="/edit/<%= post.id %>" class="btn-edit">
+          <i class="fas fa-edit"></i>
+        </a>
+        <button class="btn-delete" data-id="<%= post.id %>">
+          <i class="fas fa-trash-alt" data-id="<%= post.id %>"></i>
+        </button>
+      </article>
+
+  <h2 style="text-align: center;">
+    Отзывы:
+  </h2>
+
+      <ul>
+        <% post.review.forEach(({ name, reviewMessage, mark}) => { %>
+          <li>
+            <article class="reviews">
+              <div class="info">
+
+                <span><span style="color: gray;">Пользователь: </span><%= name %></span>
+                
+                <span class="date_review"><span style="color: gray;">Дата: </span><%= post.createdAt.toLocaleDateString() || 'No date' %></span>
+              </div>
+              <p class="review_text">
+                <span style="color: gray;">Отзыв: </span>
+                <%= reviewMessage %>
+              </p>
+
+              <p class="mark" id="mark">
+                <span style="color: gray;">Оценка: </span>
+                <%= mark %>
+              </p>
+
+            </article>
+          </li>
+          <% }) %>
+      </ul>
+
+      <div class="container">
+        <form class="review_wrapper" id="post-review" method="post" action="/posts/<%= post.id %>?_method=post">
+          <div class="form-info">
+            <label>Имя
+              <input type="text" name="name">
+            </label>
+            <label>Оценка
+              <select name="mark" style="text-align: center; width: 25%; margin-left: 37%;">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-text">
+            <label>Отзыв
+              <textarea name="reviewMessage"></textarea>
+            </label>
+          </div>
+          <div class="form-button button-review">
+            <input type="submit" value="Оставить отзыв">
+          </div>
+        </form>
+      </div>
+
+
+      <script>
+        document.addEventListener('click', (e) => {
+          const id = e.target ?.dataset ?.id || null;
+          if (id) {
+            fetch(`/posts/${id}`, {
+              method: 'DELETE',
+            }).then(() => {
+              window.location.href = '/posts';
+            });
+          }
+        });
+      </script>
+      <script>
+        let el = body.getElementsByTagName("p")
+        for (let e of el){
+          if ( e.textContent == '' * 32 ) {
+            e.innerHTML = "Нет оценки";
+          }
+        }
+
+      </script>
+  </body>
+</html>
